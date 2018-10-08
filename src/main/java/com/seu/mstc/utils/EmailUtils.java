@@ -26,10 +26,11 @@ public class EmailUtils {
 
     /**
      * 注册发送验证码
+     *
      * @param captcha
      * @param email
      */
-    public ResultInfo sendCaptcha(String captcha,String email) {
+    public ResultInfo sendCaptcha(String captcha, String email) {
         Properties prop = new Properties();
         prop.put("mail.smtp.auth", "true");
         prop.put("mail.smtp.host", "smtp.qq.com");
@@ -40,9 +41,9 @@ public class EmailUtils {
 
         prop.put("mail.smtp.port", "465");//587
         prop.put("mail.user", "seu_runningsnail@foxmail.com");//
-        prop.put("mail.password", "fmpcehmvlqybbcje");//
-        this.pp=prop;
-        Authenticator authenticator=new Authenticator(){
+        prop.put("mail.password", "rrgckgixrzcxbejf");//
+        this.pp = prop;
+        Authenticator authenticator = new Authenticator() {
 
             protected PasswordAuthentication getPasswordAuthentication() {
                 // 用户名、密码
@@ -54,7 +55,7 @@ public class EmailUtils {
         Session session = Session.getInstance(pp, authenticator);
         MimeMessage message = new MimeMessage(session);
         try {
-            InternetAddress form = new InternetAddress(pp.getProperty("mail.user"),"SEU_MSTC_Blog");
+            InternetAddress form = new InternetAddress(pp.getProperty("mail.user"), "SEU_MSTC_Blog");
 
             message.setFrom(form);
 
@@ -67,21 +68,19 @@ public class EmailUtils {
             message.setSentDate(new Date());
 
 
-
-
             MimeMultipart related = new MimeMultipart("related");
 
             MimeBodyPart content = new MimeBodyPart();
 
 
-            content.setContent("欢迎注册SEU_MSTC_Blog，这是你的验证码：<span style='font-weight:bold;'>"+captcha+"</span>"+"<br/>若不是本人操作，请忽略本邮件。", "text/html;charset=UTF-8");
+            content.setContent("欢迎注册SEU_MSTC_Blog，这是你的验证码：<span style='font-weight:bold;'>" + captcha + "</span>" + "<br/>若不是本人操作，请忽略本邮件。", "text/html;charset=UTF-8");
 
             related.addBodyPart(content);
             //related.addBodyPart(resource);
 
             message.setContent(related);
             Transport.send(message);
-        }  catch (Exception e) {
+        } catch (Exception e) {
             // TODO Auto-generated catch block
             return ResultInfo.build(500, "发送验证码邮件发生错误！");
         }
@@ -90,69 +89,4 @@ public class EmailUtils {
 
 
 
-    /**
-     * 注册成功后发送邮件
-     * @param user
-     * @param email
-     */
-    public void sendEmail(String user,String email){
-        Properties prop = new Properties();
-        prop.put("mail.smtp.auth", "true");
-        prop.put("mail.smtp.host", "smtp.qq.com");
-        prop.put("mail.smtp.port", "587");
-        prop.put("mail.user", "picshow@foxmail.com");
-        prop.put("mail.password", "aweqrlbjufmedbfj");//wetsxjprfldrejch
-        this.pp=prop;
-        Authenticator authenticator=new Authenticator(){
-
-            protected PasswordAuthentication getPasswordAuthentication() {
-                // 用户名、密码
-                String userName = pp.getProperty("mail.user");
-                String password = pp.getProperty("mail.password");
-                return new PasswordAuthentication(userName, password);
-            }
-        };
-        Session session = Session.getInstance(pp, authenticator);
-        MimeMessage message = new MimeMessage(session);
-        try {
-            InternetAddress form = new InternetAddress(pp.getProperty("mail.user"),"Picshow");
-
-            message.setFrom(form);
-
-            InternetAddress to = new InternetAddress(email);
-
-            message.setRecipient(RecipientType.TO, to);
-
-            message.setSubject(user+"，欢迎你加入SEU_MSTC_Blog！");
-
-            message.setSentDate(new Date());
-
-
-            //message.setContent("<a href='http://1gj7070262.iask.in/chat'>请从这里开始</a>", "text/html;charset=UTF-8");
-
-            MimeMultipart related = new MimeMultipart("related");
-
-            MimeBodyPart content = new MimeBodyPart();
-            MimeBodyPart resource = new MimeBodyPart();
-
-            //String filePath=RegisterServiceImpl.class.getResource("/梦想.jpg").getPath();
-            //filePath= URLDecoder.decode(filePath, "utf-8");
-            //DataSource ds=new FileDataSource(new File(filePath));
-            //DataHandler handler = new DataHandler(ds);
-            //resource.setDataHandler(handler);
-            //resource.setContentID("dream.jpg");
-
-            content.setContent("<img src='cid:dream.jpg' width='100%'/> <a href='http://1gj7070262.iask.in/chat'>Picshow从这里开始</a>", "text/html;charset=UTF-8");
-
-            related.addBodyPart(content);
-            related.addBodyPart(resource);
-
-            message.setContent(related);
-            Transport.send(message);
-        }  catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-    }
 }

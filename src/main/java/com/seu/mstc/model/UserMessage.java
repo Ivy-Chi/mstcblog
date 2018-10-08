@@ -12,7 +12,7 @@ public class UserMessage {
     private int toId;//接收该消息的人
     private String content;//消息内容
     private Date createTime;//消息发送时间
-    private int hasRead;//该消息用户有没有读过
+    private int hasRead;//该消息用户有没有读过 0 未读，1 读过
     private String conversationId;//会话用户id关系,格式为：23_12，表示用户23和12之间的聊天
 
     public int getId() {

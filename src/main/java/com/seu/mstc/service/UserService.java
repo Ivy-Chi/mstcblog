@@ -2,6 +2,9 @@ package com.seu.mstc.service;
 
 import com.seu.mstc.model.User;
 import com.seu.mstc.result.ResultInfo;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 /**
  * Created by lk on 2018/4/30.
@@ -20,7 +23,11 @@ public interface UserService {
     public ResultInfo checkPasswordById(Integer id,String password);//验证密码
     public ResultInfo updateEmail(Integer id,String password,String token);//更换邮箱
     public ResultInfo updateBackgroundUrlById(User user,String token);
-    public ResultInfo updateHeadUrlById(User user,String token);//更新头像
+    public ResultInfo updateHeadUrlById(User user,String headUrl);//更新头像
     public ResultInfo getUserInfoByUserId(Integer userId);//获取个人信息
+    public ResultInfo getUserId();//获取当前用户的id
+    public ResultInfo getUser();//获取当前用户
+    public ResultInfo retrievePassword(String email, String password);//忘记密码时重新设定密码
+    public String saveImage(MultipartFile file) throws IOException;// 上传头像
 
 }

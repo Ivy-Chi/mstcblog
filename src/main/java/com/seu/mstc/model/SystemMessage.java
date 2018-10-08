@@ -13,6 +13,9 @@ public class SystemMessage {
     private String content;//消息内容
     private int hasRead;//该消息用户有没有读过
     private Date createTime;//消息发送时间
+    private int entityId;//消息序号
+    private int entityType;//消息类型    0代表算法题，1代表博文，2代表技术贴，3代表活动，4代表新闻，5代表系统消息
+
 
     public int getId() {
         return id;
@@ -60,5 +63,21 @@ public class SystemMessage {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public int getEntityId() {
+        return entityId;
+    }
+
+    public void setEntityId(int entityId) {
+        this.entityId = entityId;
+    }
+
+    public int getEntityType() {
+        return entityType;
+    }
+
+    public void setEntityType(int entityType) {
+        this.entityType = entityType;
     }
 }

@@ -3,7 +3,9 @@ package com.seu.mstc.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.seu.mstc.dao.UserDao;
+import com.seu.mstc.model.HostHolder;
 import com.seu.mstc.model.User;
+import com.seu.mstc.pojo.ReturnPojo;
 import com.seu.mstc.result.ResultInfo;
 import com.seu.mstc.service.UserService;
 import com.seu.mstc.utils.EmailUtils;
@@ -11,13 +13,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.util.StreamUtils;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.text.ParseException;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 /**
@@ -39,9 +49,12 @@ public class UserController {
     @Autowired
     UserDao userDao;
 
+    @Autowired
+    HostHolder hostHolder;
+
     /**
      * 用户名和邮箱重复性检查
-     * 数据库中已有该用户名或者邮箱则返回true，否则返货false
+     * 数据库中已有该用户名或者邮箱则返回true，否则返会false
      * @param jsonObject
      * @return
      */
@@ -110,7 +123,10 @@ public class UserController {
         result=userService.login(email,password);
 
         if(result.getStatus()==200){
-            Cookie cookie=new Cookie("token",user.getToken());
+            String token = UUID.randomUUID().toString();
+            user.setToken(token);
+            userDao.updateToken(user);
+            Cookie cookie=new Cookie("token",token);
             cookie.setPath("/");
             if(rememberme){
                 cookie.setMaxAge(3600*24*5);//有效期5天3600*24*5
@@ -121,4 +137,130 @@ public class UserController {
         return result;
     }
 
+    //登出
+    @RequestMapping(value="/logout",method = RequestMethod.POST)
+    public ResultInfo logout (@RequestBody JSONObject jsonObject,HttpServletResponse response){
+        ResultInfo resultInfo = null;
+        String token = UUID.randomUUID().toString();
+        User user = hostHolder.getUser();
+        if(user!=null) {
+            user.setToken(token);
+            resultInfo = ResultInfo.ok();
+        }
+        return  resultInfo;
+    }
+
+    //给前端发送当前用户的id，若处于未登录状态则发送-1
+    @RequestMapping(value="/getUserId",method = RequestMethod.POST)
+    public ResultInfo getUserId(@RequestBody JSONObject jsonObject,HttpServletResponse response){
+        ResultInfo result =null;
+        int id = jsonObject.getInteger("id");
+        if(id==1){
+            result = userService.getUserId();
+        }
+        return result;
+    }
+
+    //获取当前用户
+    @RequestMapping(value="/getUser",method = RequestMethod.POST)
+    public ResultInfo getUser(@RequestBody JSONObject jsonObject,HttpServletResponse response){
+        ResultInfo result =null;
+        int id = jsonObject.getInteger("id");
+        if(id==1){
+            result = userService.getUser();
+        }
+        return result;
+    }
+
+    //邮箱修改密码
+    @RequestMapping(value="/retrievePassword",method = RequestMethod.POST)
+    public ResultInfo retrievePassword(@RequestBody JSONObject jsonObject,HttpServletResponse response){
+        String email=jsonObject.getString("email");
+        String password=jsonObject.getString("password");
+
+        String token= UUID.randomUUID().toString();
+        Cookie cookie = new Cookie("token", token);
+        cookie.setPath("/");
+        cookie.setMaxAge(3600 * 24 * 5);//5天的有效期
+        response.addCookie(cookie);
+
+        return userService.retrievePassword(email,password);
+    }
+
+
+    //个人中心，修改用户信息
+    @RequestMapping(value="/personalCenter/editPersonalInformation",method = RequestMethod.POST)
+    public ResultInfo editPersonalInformation(@RequestBody JSONObject jsonObject,
+                                              HttpServletResponse response){
+        User user=hostHolder.getUser();
+        //nickname
+        if(jsonObject.containsKey("nickname")) {
+            String nickname = jsonObject.getString("nickname");
+            if(!user.getNickname().equals(nickname))
+                user.setNickname(nickname);
+        }
+        //sex
+        if(jsonObject.containsKey("sex")) {
+            String sex= jsonObject.getString("sex");
+            int sex1;
+            if(sex.equals("男"))
+                sex1=1;
+            else if (sex.equals("女"))
+                sex1=2;
+            else
+                sex1=0;
+            if(user.getSex()!=sex1)
+                user.setSex(sex1);
+        }
+        //birthday
+        if(jsonObject.containsKey("birthday")){
+            String birthday= jsonObject.getString("birthday");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                Date birthday1=sdf.parse(birthday);
+                user.setBirthday(birthday1);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        //school
+        if(jsonObject.containsKey("school")) {
+            String school = jsonObject.getString("school");
+            user.setSchool(school);
+        }
+        //hobby
+        if(jsonObject.containsKey("hobby")) {
+            String hobby = jsonObject.getString("hobby");
+            user.setHobby(hobby);
+        }
+
+        String token=user.getToken();
+
+        ResultInfo result =null;
+        result=userService.updateUserInfo(user,token);      //更新数据库
+
+        return result;
+    }
+
+    //个人中心，修改用户头像
+    @RequestMapping(value="/personalCenter/editPersonalHead",method = RequestMethod.POST)
+    public ResultInfo editPersonalHead( @RequestParam(value = "image", required = false) MultipartFile file){
+
+        User user=hostHolder.getUser();
+        ResultInfo result=null;
+        try {
+            String fileUrl = userService.saveImage(file);
+            if (fileUrl == null) {
+                return result;
+            }
+            result = userService.updateHeadUrlById(user, fileUrl);
+            return result;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return result;
+        }
+    }
+
+
 }
+

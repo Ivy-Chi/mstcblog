@@ -5,10 +5,12 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by lk on 2018/4/30.
  */
+@Component
 @Mapper
 public interface UserDao {
     String TABLE_NAME=" user ";
@@ -33,18 +35,26 @@ public interface UserDao {
     User selectByToken(String token);
 
 
-    @Update({"update ",TABLE_NAME, " set password=#{password} where id=#{id}"})
+    @Update({"update ",TABLE_NAME, " set password=#{password},salt=#{salt} where id=#{id}"})
     void updatePassword(User user);
+
+    @Update({"update ",TABLE_NAME, " set token=#{token} where id=#{id}"})
+    void updateToken(User user);
 
     @Update({"update ",TABLE_NAME, " set email=#{email} where id=#{id}"})
     void updateEmail(User user);
 
 
     @Update({"update ",TABLE_NAME, " set head_url=#{headUrl} where id=#{id}"})
-    void updateHeadUrl(User user);
+    int updateHeadUrl(User user);
 
     @Update({"update ",TABLE_NAME, " set nickname=#{nickname}, sex=#{sex},  " +
             "phone=#{phone}, birthday=#{birthday}, hometown=#{hometown}, school=#{school}, " +
             "department=#{department}, degree=#{degree}, hobby=#{hobby}, qq=#{qq}, wechat=#{wechat}, label=#{label} where id=#{id}"})
-    void updateUserInfo(User user);
+    void updateUserInfoById(User user);
+
+    @Update({"update ",TABLE_NAME, " set nickname=#{nickname}, sex=#{sex},  " +
+            "phone=#{phone}, birthday=#{birthday}, hometown=#{hometown}, school=#{school}, " +
+            "department=#{department}, degree=#{degree}, hobby=#{hobby}, qq=#{qq}, wechat=#{wechat}, label=#{label} where token=#{token}"})
+    int updateUserInfoByToken(User user);
 }

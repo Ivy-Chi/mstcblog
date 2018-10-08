@@ -11,7 +11,7 @@ public class User {
     private String email;
     private String password;
     private String salt;
-    private int sex;//性别，1代表男生，2代表女生
+    private int sex;//性别，1代表男生，2代表女生,0代表保密
     private String headUrl;//头像
     private String phone;
     private Date birthday;

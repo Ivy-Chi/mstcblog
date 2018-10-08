@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="styles/bootstrap.min.css">
+    <link rel="stylesheet" href="styles/question1.css">
+    <meta charset="UTF-8">
+    <title>技术讨论贴</title>
+</head>
+<body>
+<div id="header"></div>
+<div class="main">
+    <div class="left">
+        <ul class="nav nav-pills nav-stacked">
+            <li role="presentation" class="active"><a href="/blog.html">讨论帖分类</a></li>
+            <li role="presentation"><a href="/blog.html?flag=1">C++</a></li>
+            <li role="presentation"><a href="/blog.html?flag=2">Java</a></li>
+            <li role="presentation"><a href="/blog.html?flag=3">前端</a></li>
+            <li role="presentation"><a href="/blog.html?flag=4">后台</a></li>
+            <li role="presentation"><a href="/blog.html?flag=5">机器学习</a></li>
+            <li role="presentation"><a href="/blog.html?flag=6">硬件嵌入式</a></li>
+        </ul>
+    </div>
+
+
+    <div class="middle">
+
+
+
+
+
+
+        <div id="discussSolution" class="tab-content discuss-list-base">
+            <div id="discuss_list" class="discuss-list">
+
+
+                <script id="each_question" type="text/x-jquery-tmpl">
+                {{each question}}
+                <div class="discuss-item last-visited-topic-entered">
+                    <div class="user-avatar hidden-xs" title="{{= $value.nickname}}">
+                        <div class="avatar simple-avatar__1nLM hover-effect__2WOZ"><a href="/henryeecs" target="_blank"><img
+                                class="simp-avatar__mRN_" src="{{= $value.headUrl}}"
+                                alt="{{= $value.nickname}}" data-has-link="true" style="height: 30px; width: 30px;"></a></div>
+                    </div>
+                    <div class="info">
+                        <div class="title"><a href="questionDetail1.html?questionId={{= $value.id}}">{{= $value.title}} </a></div>
+                        <div class="tab-content"><a href="questionDetail1.html?questionId={{= $value.id}}">{{= $value.content}} </a></div>
+                        <div class="updates"><a id="author_name" href="">{{= $value.nickname}}&nbsp;&nbsp;</a>Created at:&nbsp;<span
+                                title="{{= $value.createTime}}">{{= $value.createTime}}&nbsp; | &nbsp;</span><span>{{= $value.commentCount}}条评论</span>
+                        </div>
+                    </div>
+                    <div class="stats">
+                        <div class="votes item">
+                            <div class="name">VOTES</div>
+                            <div class="value">1</div>
+                        </div>
+                        <div class="views item">
+                            <div class="name">VIEWS</div>
+                            <div class="value">53</div>
+                        </div>
+                    </div>
+                </div>
+                {{/each}}
+                </script>
+
+
+            </div>
+        </div>
+
+
+        <div class="pagination-base light-pager">
+            <ul class="pagination">
+                <li class="previous disabled"><a tabindex="0" role="button"><i class="fa fa-angle-left"
+                                                                               aria-hidden="true"></i></a></li>
+                <li class="active"><a role="button" tabindex="0" aria-label="Page 1 is your current page"
+                                      aria-current="page">1</a></li>
+                <li><a role="button" tabindex="0" aria-label="Page 2">2</a></li>
+                <li><a role="button" tabindex="0" aria-label="Page 3">3</a></li>
+                <li><a role="button" tabindex="0" aria-label="Page 4">4</a></li>
+                <li><a role="button" tabindex="0" aria-label="Page 5">5</a></li>
+                <li class="break"><a>...</a></li>
+                <li><a role="button" tabindex="0" aria-label="Page 100">100</a></li>
+                <li><a role="button" tabindex="0" aria-label="Page 101">101</a></li>
+                <li class="next"><a tabindex="0" role="button"><i class="fa fa-angle-right" aria-hidden="true"></i></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+
+</div>
+
+
+<div class="right">
+    显示热门推荐栏
+</div>
+</div>
+</body>
+<script src="scripts/head.js"></script>
+<script src="scripts/question.js"></script>
+<script src="scripts/jquery.js"></script>
+<script src="scripts/jquery.tmpl.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $("#header").empty().load("header.html");
+    });
+    window.onload = function () {
+        onloadHeader();
+        onloadQuestion1();
+    }
+</script>
+
+
+
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dropeffect="none" class="js is-AppPromotionBarVisible cssanimations csstransforms csstransitions flexbox no-touchevents no-mobile" style="">
+<head>
+    <script src="scripts/question.js"></script>
+    <script src="scripts/header.js"></script>
+    <link rel="stylesheet" type="text/css" href="styles/bootstrap.min.css">
+    <link rel="stylesheet" href="styles/index.css">
+    <link rel="stylesheet" type="text/css" href="styles/detail.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+    <script src="scripts/vue.js"></script>
+    <meta charset="UTF-8">
+    <title>question</title>
+</head>
+
+<!--<script type="text/javascript">-->
+    <!--$(document).ready(function() {-->
+        <!--$('#header').load('header.html')-->
+    <!--});-->
+<!--</script>-->
+
+<body class="zhi ">
+<div id="header"></div>
+
+
+<div class="zh-add-question-form" id="zh-add-question-form" style="display:none">
+    <div class="zg-section-big clearfix">
+        <div class="zg-form-text-input add-question-title-form" style="position: relative;">
+            <input type="text" class="js-title zg-editor-input zu-seamless-input-origin-element" id="question-title" name="question-title" placeholder="写下你的问题" style="height:22px;min-height:auto;"></textarea>
+            </div>
+        </div>
+
+    <div class="zg-section-big">
+        <div class="add-question-section-title">问题说明（可选）：</div>
+        <div id="zh-question-suggest-detail-container" class="zm-editable-status-editing">
+            <div class="zm-editable-editor-wrap no-toolbar">
+                <div class="zm-editable-editor-outer">
+                    <div class="zm-editable-editor-field-wrap">
+                        <textarea id="question-content" name="question-content" class="js-content zm-editable-editor-field-element editable" placeholder="问题背景、条件等详细信息" style="font-style:italic;width:98%;"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <div>
+        <button id="add-question-cancel" onclick="cancelPublicQuestion()"><span>取消</span></button>
+        <button id="add-question-submit" onclick="publicQuestion()"><span>确定</span></button>
+    </div>
+
+    </div>
+
+<script type="text/javascript">
+    window.onload = function () {
+        onloadQuestion();
+        onloadHeader();
+    }
+</script>
+
+    <div class="zg-wrap zu-main clearfix " role="main" id="display-question">
+        <div class="zu-main-content">
+            <div class="zu-main-content-inner">
+                <div class="zg-section" id="zh-home-list-title">
+                    <i class="zg-icon zg-icon-feedlist"></i>最新动态
+                    <input type="hidden" id="is-topstory">
+                    <span class="zg-right zm-noti-cleaner-setting" style="list-style:none">
+                        <a href="https://nowcoder.com/settings/filter" class="zg-link-gray-normal">
+                            <i class="zg-icon zg-icon-settings"></i>设置</a></span>
+                </div>
+
+
+                <div class="zu-main-feed-con navigable" data-feedtype="topstory" id="zh-question-list" data-widget="navigable" data-navigable-options="{&quot;items&quot;:&quot;&gt; .zh-general-list .feed-content&quot;,&quot;offsetTop&quot;:-82}">
+                    <a href="javascript:;" class="zu-main-feed-fresh-button" id="zh-main-feed-fresh-button" style="display:none"></a>
+                    <div id="js-home-feed-list" class="zh-general-list topstory clearfix" data-init="{&quot;params&quot;: {}, &quot;nodename&quot;: &quot;TopStory2FeedList&quot;}" data-delayed="true" data-za-module="TopStoryFeedList">
+                    </div>
+                    <a href="javascript:;" id="zh-load-more" data-method="next" class="zg-btn-white zg-r3px zu-button-more" style="">更多</a></div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
